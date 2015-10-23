@@ -10,6 +10,7 @@
     "test": "node tests/test"
   },
   "dependencies": {
+    "bunyan": "^1.5.1",
     "forever-monitor": "^1.7.0",
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",

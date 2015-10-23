@@ -9,8 +9,10 @@ const apps = [
    { packagePath: 'web', kube: { replicas: 2 } }
 ];
 
-const cluster = huge.node.create({
+const node = huge.node.create({
    name: 'testNode',
    packageSource: path.resolve(__dirname, './mockPackages'),
    services: apps
 });
+
+huge.start(node);

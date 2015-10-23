@@ -2,72 +2,27 @@
 
 const _ = require('lodash');
 const t = require('tcomb-validation');
+const bunyan = require('bunyan');
 
 const cfg = require('./config');
+const types = require('./types');
 
-// const consul = startConsul();
-//
-// consul.on('exit', () => {
-//    console.log(`Consul has existed after [1] restarts`);
-// });
-//
-// function startConsul () {
-//    const dir = cfg.consul.dir;
-//    const pidFile = path.join(dir, 'consul.pid');
-//    const args = [
-//       path.join(dir, 'consul'),
-//       'agent',
-//       '-server',
-//       '-config-dir', path.resolve(process.cwd(), './cfg/consul'),
-//       '-data-dir', path.resolve(dir, './data'),
-//       '-ui-dir', path.resolve(dir, './ui'),
-//       '-pid-file', pidFile,
-//       '-bootstrap-expect', 1
-//    ];
-//
-//    return forever.start(args, {
-//       cwd: dir,
-//       max: 1,
-//       pidFile: pidFile
-//    });
-// }
 
 const Node = require('./lib/node');
+const consul = require('./lib/consul');
 
 module.exports = {
    node: Node,
-   // start: t.func([Node, t.Number], t.Any).of(startNode)
+   start: startNode
 };
-//
-// function startNode (node, port) {
-//    return new Cluster( node.packages, { port } );
-// }
 
+function startNode () {
+   const node = Node(arguments[0]);
+   const opts = types.StartOptions(_.defaults(arguments[0] || {}, {
+      host: cfg.consul.host,
+      port: cfg.consul.port,
+      logger: bunyan.createLogger({ huge: 'v1', name: node.name })
+   }));
 
-// const services = [
-//    { packagePath: '' },
-//    { packagePath: '' }
-// ];
-//
-// const remote = {
-//    hosts: [
-//       '0.0.0.0:5500',
-//       '0.0.0.0:5500',
-//       '0.0.0.0:5500',
-//       '0.0.0.0:5500'
-//    ],
-//    dependencies: [
-//
-//    ]
-// };
-//
-// const myNode = huge.node.create({
-//    name: 'something',
-//    services: services,
-//    remote: remote
-// });
-//
-// huge.start(myNode, {
-//    port: 8500,
-//    logger: huge.console
-// });
+   console.log(consul.start(node, opts));
+}

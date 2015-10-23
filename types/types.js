@@ -2,6 +2,7 @@
 
 const t = require('tcomb-validation');
 const url = require('url');
+const bunyan = require('bunyan');
 
 const optional = t.maybe.bind(t);
 const list = t.list.bind(t);
@@ -40,11 +41,20 @@ const Metadata = t.struct({
    config: t.Object
 });
 
+const Logger = t.irreducible('BunyanLogger', inst => (inst instanceof bunyan));
+
+const StartOptions = t.struct({
+   port: optional(t.Number),
+   logger: optional(Logger)
+}, 'StartOptions');
+
 module.exports = {
    ServiceOptions,
    ServiceSpec,
    Host,
    NodeSpec,
+   Logger,
+   StartOptions,
    Metadata
 };
 
