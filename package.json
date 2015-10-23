@@ -1,0 +1,34 @@
+{
+  "name": "huge",
+  "version": "0.1.0",
+  "description": "Microservices orchestration framework for node.js",
+  "main": "huge.js",
+  "scripts": {
+    "start": "node huge.js",
+    "test": "node tests/test"
+  },
+  "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a-s-o/huge.git"
+  },
+  "keywords": [
+    "node.js",
+    "node",
+    "microservices",
+    "micro",
+    "service",
+    "discovery",
+    "cluster",
+    "process",
+    "monitor",
+    "orchestration"
+  ],
+  "author": "Amandeep",
+  "license": "MIT",
+  "homepage": "https://github.com/a-s-o/huge#readme",
+  "bugs": {
+    "url": "https://github.com/a-s-o/huge/issues"
+  }
+}
