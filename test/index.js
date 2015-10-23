@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const huge = require('../index.js');
+const huge = require('../');
 
 const apps = [
    { packagePath: 'feed' },
