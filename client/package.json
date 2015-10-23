@@ -1,0 +1,8 @@
+{
+   "name": "kube-client",
+   "main": "client.js",
+   "version": "1.0.0",
+   "description": "",
+   "author": "Amandeep",
+   "license": "MIT"
+}
