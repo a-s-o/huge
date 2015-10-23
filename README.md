@@ -3,27 +3,32 @@ Micro-services framework for node.js
 
 ## Installation
 
+**Caution:** Do not use until version `1.0.0`; all current releases are meant only for development and testing. Version 1 release will solidify the api and internals; expected November 2015
+
     > npm install huge
 
 ## What is this
 
-This framework allows you build a system using small, independent node.js applications running in separate processes (called micro-services). These processes can communicate with each other using built in service discovery.
+**Huge** is set of components that allows you to design and build a system using small, independent `node.js` applications (called micro-services). These processes can communicate with each other using built in service discovery.
 
-Huge framework is not designed for infinite scalability. I use it for benefits in code quality, isolation and organization. It is not meant for (twitter|google|facebook) scales. The name is #ironic.
+The framework plays to node's strengths to create small precise applications instead of building complex monolithic systems.
+
+**Huge** is not designed for infinite scalability. I use it for benefits in code quality, isolation and organization. It is not meant for (twitter|google|facebook) scales. The name is _#ironic_.
 
 ## Features
 
-* Specify dependencies between independent node applications
+* Easy orchestration of dependent applications
 * Lightweight, provides a simple layer over proven components
 * Service discovery using `consul`
 * Load balancing between multiple instances of same micro-service using native node.js `cluster` module
 
 # Roadmap to 1.0
 
-* [ ] Connect more than 1 nodes (currently only single server)
+* [ ] API documentation
 * [ ] Process monitoring with `forever-monitor`
 * [ ] Log consolidation using `bunyan`
-
+* [ ] Connect remote nodes (currently single server only)
+* [ ] Integration tests
 
 ## Example
 
