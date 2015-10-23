@@ -24,17 +24,18 @@ The framework plays to node's strengths to create small precise applications ins
 
 # Roadmap to 1.0
 
-* [ ] API documentation
 * [ ] Process monitoring with `forever-monitor`
 * [ ] Log consolidation using `bunyan`
+* [ ] API documentation
 * [ ] Connect remote nodes (currently single server only)
 * [ ] Integration tests
+* [ ] Examples + open-source some services
 
 ## Example
 
 ```javascript
 
-const web = huge.node.create({
+const myNode = huge.node.create({
    name: 'web',
    services: [
       { packagePath: '/path/to/my-db-server' },

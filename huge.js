@@ -7,16 +7,9 @@ const bunyan = require('bunyan');
 const cfg = require('./config');
 const types = require('./types');
 
-
 const Node = require('./lib/node');
-const consul = require('./lib/consul');
 
-module.exports = {
-   node: Node,
-   start: startNode
-};
-
-function startNode () {
+function hugeStart () {
    const node = Node(arguments[0]);
    const opts = types.StartOptions(_.defaults(arguments[0] || {}, {
       host: cfg.consul.host,
@@ -24,5 +17,10 @@ function startNode () {
       logger: bunyan.createLogger({ huge: 'v1', name: node.name })
    }));
 
-   console.log(consul.start(node, opts));
+   return Node.start(node, opts);
 }
+
+module.exports = {
+   node: Node,
+   start: hugeStart
+};
