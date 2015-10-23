@@ -1,0 +1,16 @@
+{
+   "name": "web",
+   "main": "web.js",
+   "version": "1.0.0",
+   "description": "",
+   "author": "Amandeep",
+   "license": "UNLICENSED",
+   "huge": {
+      "inputs": [
+         "FEED_SERVICE_HOST",
+         "FEED_SERVICE_PORT"
+      ],
+      "outputs": [
+      ]
+   }
+}
