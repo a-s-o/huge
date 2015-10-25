@@ -3,14 +3,12 @@
 const t = require('@aso/tcomb');
 const _ = require('lodash');
 
-const helpers = require('../helpers');
-
-const testEnvVariable = _.bind(RegExp.prototype.test, /^[A-Z_]+$/);
-const EnvVariable = t.subtype(t.String, testEnvVariable);
+const types = require('../common/types');
 
 const Service = t.struct({
    name: t.String,
-   get: t.Function,
+   inputs: t.list(t.String),
+   outputs: t.list(t.String),
 
    // Methods
    compare: t.Function,
@@ -20,12 +18,14 @@ const Service = t.struct({
    setupTimeout: t.Number,
    minUptime: t.Number,
    spinSleepTime: t.Number,
-   env: t.dict(EnvVariable, t.String)
+   env: t.dict(types.EnvironmentVariable, t.String)
 });
-
 
 Service.getDefaults = function serviceDefaults () {
    return {
+      inputs         : [],
+      outputs        : [],
+
       instances      : 1,   // number of worker instances to run
 
       setupTimeout   : 3000,   // in milliseconds
@@ -34,7 +34,7 @@ Service.getDefaults = function serviceDefaults () {
    };
 };
 
-Service.create = helpers.typedFunc({
+Service.create = t.typedFunc({
    inputs: [t.Object],
    output: Service,
    fn: function serviceFactory (opts) {
@@ -42,11 +42,7 @@ Service.create = helpers.typedFunc({
    }
 });
 
-Service.get = helpers.typeFunc({
-
-});
-
-Service.compare = helpers.typedFunc({
+Service.compare = t.typedFunc({
    inputs: [Service, Service],
    output: t.Boolean,
    fn: function defaultServiceComparator (a, b) {
