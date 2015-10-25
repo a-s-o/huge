@@ -5,10 +5,12 @@ const t = require('@aso/tcomb');
 const Bluebird = require('@aso/bluebird');
 
 const Service = require('../Service');
+const checkDeps = require('./checkDeps');
 const types = require('../common/types');
 const optional = t.maybe;
 
-const Node = t.struct({
+
+const Node = module.exports = t.struct({
    name: t.String,
    services: t.list( Service )
 }, 'Node');
@@ -33,15 +35,17 @@ const StartedNode = Node.extend({
 Node.create = t.typedFunc({
    inputs: [t.Object],
    output: t.Promise,
-   fn: function nodeFactory (opts) {
-      // Wait for all services to load
-      // prior to creating the node
-      return Bluebird
-         .all(opts.services)
-         .then(services =>
-            new Node( _.default({ services }, opts) )
-         );
-   }
+   fn: Bluebird.coroutine(function *nodeFactory (opts) {
+      const services = yield opts.services;
+      const resolved = {};
+      const sorted = checkDeps(services, resolved);
+
+      const nodeOpts = {
+         services: sorted
+      };
+
+      return new Node( _.defaults(nodeOpts, opts) );
+   })
 });
 
 Node.start = t.typedFunc({
@@ -51,8 +55,9 @@ Node.start = t.typedFunc({
    })],
    output: t.Promise,
    fn: function startNode (node, opts) {
-      return startNode(node, opts).then(processes =>
-         new StartedNode( _.extend({ processes }, node) )
-      );
+      console.log(node);
+      // return startNode(node, opts).then(processes =>
+      //    new StartedNode( _.extend({ processes }, node) )
+      // );
    }
 });

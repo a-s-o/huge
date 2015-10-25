@@ -5,9 +5,8 @@ const _ = require('lodash');
 
 const types = require('../common/types');
 
-const Service = t.struct({
+const Service = module.exports = t.struct({
    name: t.String,
-   packagePath: t.String,
    inputs: t.list(t.String),
    outputs: t.list(t.String),
    paths: t.struct({
@@ -24,8 +23,10 @@ const Service = t.struct({
    setupTimeout: t.Number,
    minUptime: t.Number,
    spinSleepTime: t.Number,
+
+   cwd: t.String,
    env: t.dict(types.EnvironmentVariable, t.String)
-});
+}, 'Service');
 
 Service.getDefaults = function serviceDefaults () {
    return {
@@ -36,7 +37,10 @@ Service.getDefaults = function serviceDefaults () {
 
       setupTimeout   : 3000,   // in milliseconds
       minUptime      : 2000,   // in milliseconds
-      spinSleepTime  : 2000    // in milliseconds
+      spinSleepTime  : 2000,   // in milliseconds
+
+      cwd            : process.cwd(),
+      env            : {}
    };
 };
 
