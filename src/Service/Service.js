@@ -7,8 +7,14 @@ const types = require('../common/types');
 
 const Service = t.struct({
    name: t.String,
+   packagePath: t.String,
    inputs: t.list(t.String),
    outputs: t.list(t.String),
+   paths: t.struct({
+      dir: t.String,
+      package: t.String,
+      main: t.String
+   }),
 
    // Methods
    compare: t.Function,
