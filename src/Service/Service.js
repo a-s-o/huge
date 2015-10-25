@@ -18,9 +18,11 @@ const Service = module.exports = t.struct({
    // Methods
    compare: t.Function,
 
-   // Optional properties
+   // Service config
    instances: t.Number,
    setupTimeout: t.Number,
+
+   // Process config
    minUptime: t.Number,
    spinSleepTime: t.Number,
 

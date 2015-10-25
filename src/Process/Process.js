@@ -7,19 +7,36 @@ const Monitor = require('forever-monitor').Monitor;
 
 const types = require('../common/types');
 
+function withServiceDiscovery (obj) {
+   return obj.hasOwnProperty('SERVICE_DISCOVERY_HOST') &&
+      obj.hasOwnProperty('SERVICE_DISCOVERY_PORT');
+}
+
+const EnvironmentObject = t.subtype(types.EnvironmentObject, withServiceDiscovery);
+
 const Process = module.exports = t.struct({
    pidFile: t.String,
    monitor: types.Monitor
 }, 'Process');
 
 Process.create = t.typedFunc({
-   inputs: [t.String, t.String, t.Object],
-   output: Process,
-   fn: function processFactory (pidName, command) {
-      const pidFile = getPidFilename(pidName);
-      const opts = _.extend({ pidFile }, arguments[2]);
+   inputs: [t.struct({
+      pid: t.String,
+      command: t.String,
+      options: t.struct({
+         env : EnvironmentObject,
 
-      return new Monitor(command, opts);
+         setupTimeout: t.Number,
+         minUptime: t.Number,
+         spinSleepTime: t.Number,
+         cwd: t.String
+      })
+   })],
+   output: Process,
+   fn: function processFactory (inputs) {
+      const pidFile = getPidFilename(inputs.pid);
+      const opts = _.extend({ pidFile }, inputs.options);
+      return new Monitor(inputs.command, opts);
    }
 });
 
