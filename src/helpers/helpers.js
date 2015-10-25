@@ -1,6 +1,6 @@
 'use strict';
 
-const t = require('tcomb-validation');
+const t = require('@aso/tcomb');
 const _ = require('lodash');
 
 function typedFunc (obj) {

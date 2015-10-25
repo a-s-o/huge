@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const t = require('tcomb-validation');
+const t = require('@aso/tcomb');
 const bunyan = require('bunyan');
 
 const cfg = require('./config');
