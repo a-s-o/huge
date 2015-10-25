@@ -9,18 +9,18 @@ const types = require('./types');
 
 const Node = require('./lib/node');
 
-function hugeStart () {
-   const node = Node(arguments[0]);
-   const opts = types.StartOptions(_.defaults(arguments[0] || {}, {
-      host: cfg.consul.host,
-      port: cfg.consul.port,
-      logger: bunyan.createLogger({ huge: 'v1', name: node.name })
-   }));
-
-   return Node.start(node, opts);
-}
-
 module.exports = {
    node: Node,
-   start: hugeStart
+   start: function start (node, opts) {
+      const optionsWithDefaults = _.defaults(opts || {}, {
+         host: cfg.consul.host,
+         port: cfg.consul.port,
+         logger: bunyan.createLogger({ huge: 'v1', name: node.name })
+      });
+
+      const validatedNode = Node(node);
+      const validatedOpts = types.StartOptions(optionsWithDefaults);
+
+      return Node.start(validatedNode, validatedOpts);
+   }
 };
