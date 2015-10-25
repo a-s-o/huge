@@ -5,36 +5,25 @@ const t = require('@aso/tcomb');
 const Bluebird = require('@aso/bluebird');
 
 const Service = require('../Service');
-const checkDeps = require('./checkDeps');
 const types = require('../common/types');
 const optional = t.maybe;
 
+// Internal functions for create and starting nodes
+const checkDeps = require('./checkDeps');
+const startNode = require('./startNode');
 
 const Node = module.exports = t.struct({
    name: t.String,
    services: t.list( Service )
 }, 'Node');
 
-const ProcessReference = t.struct({
-   pid: t.Number,
-   monitor: t.Any
-}, 'ProcessReference');
-
-// A started node has a processes property
-// which at minimum contains a reference to
-// the node's consul service
-const StartedNode = Node.extend({
-   processes: t.subtype(
-      t.dict(t.String, ProcessReference),
-      function withConsul (refs) {
-         return _.has(refs, 'consul') && !!refs.consul;
-      }
-   )
-});
-
+// Creates a new node after checking incoming services
+// for dependency issues. Services can be provided
+// asyncronously as a promise and will be resolved before
+// the resulting node is created
 Node.create = t.typedFunc({
-   inputs: [t.Object],
-   output: t.Promise,
+   inputs: [t.Object], // Object { name:String, services:Array < Service|Promise > }
+   output: t.Promise,  // Promise < Node >
    fn: Bluebird.coroutine(function *nodeFactory (opts) {
       const services = yield opts.services;
       const resolved = {};
@@ -48,16 +37,15 @@ Node.create = t.typedFunc({
    })
 });
 
+// Starts all the services in a node in a new
+// consul instance and returns a map of services
+// and their respective processes, which can be
+// used to create an ActiveNode
 Node.start = t.typedFunc({
    inputs: [Node, t.struct({
-      port   : optional(t.Number),
-      logger : optional(types.Logger)
+      port   : optional(t.Number),     // Default: 8500
+      logger : optional(types.Logger)  // Default: Logger { name: 'huge' }
    })],
-   output: t.Promise,
-   fn: function startNode (node, opts) {
-      console.log(node);
-      // return startNode(node, opts).then(processes =>
-      //    new StartedNode( _.extend({ processes }, node) )
-      // );
-   }
+   output: t.Promise, // Promise < ActiveNode.processes >
+   fn: startNode
 });
