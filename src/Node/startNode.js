@@ -27,8 +27,6 @@ module.exports = function startNode (node/*, opts*/) {
 
    if (!opts.logger) opts.logger = createLogger(node.name);
 
-   console.log(opts.logger);
-
    // Add service discovery variables to all processes
    opts.env.SERVICE_DISCOVERY_HOST = 'localhost';
    opts.env.SERVICE_DISCOVERY_PORT = opts.port;

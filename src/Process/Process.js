@@ -56,16 +56,29 @@ function getPidFilename (name) {
 function setupLogger () {
    const Proto = {
       onError (err) {
-         this.log.error({ eventType: 'error', err: err });
+         this.log.error({
+            eventType: 'error',
+            err: err,
+            pid: _.get(this, 'monitor.child.pid')
+         });
       },
-      onStart (process) {
-         this.log.info({ eventType: 'start', pid: process.pid });
+      onStart () {
+         this.log.info({
+            eventType: 'start',
+            pid: _.get(this, 'monitor.child.pid')
+         });
       },
-      onStop (process) {
-         this.log.info({ eventType: 'start', pid: process.pid });
+      onStop () {
+         this.log.info({
+            eventType: 'start',
+            pid: _.get(this, 'monitor.child.pid')
+         });
       },
       onRestart () {
-         this.log.info({ eventType: 'restart' });
+         this.log.info({
+            eventType: 'restart',
+            pid: _.get(this, 'monitor.child.pid')
+         });
       },
       onStdOut (data) {
          if (this.service.stdout) {
@@ -82,8 +95,11 @@ function setupLogger () {
          }
       },
       onExit () {
+         this.log.info({
+            eventType: 'exit'
+         });
+
          const ctx = this;
-         this.log.info({ eventType: 'exit' });
          this.monitor.off('error',   ctx.onError);
          this.monitor.off('start',   ctx.onStart);
          this.monitor.off('stop',    ctx.onStop);
