@@ -8,7 +8,14 @@ const EnvVarRegex = /^[A-Z_]+$/;
 const EnvironmentVariable = t.subtype(t.String, function EnvironmentVariable (str) {
    return EnvVarRegex.test(str);
 });
-const EnvironmentObject = t.dict(EnvironmentVariable, t.String, 'EnvironmentObject');
+
+const SerializableValue = t.union([t.String, t.Number], 'SerializableValue');
+
+const EnvironmentObject = t.dict(
+   EnvironmentVariable,
+   SerializableValue,
+   'EnvironmentObject'
+);
 
 const Logger = t.irreducible('BunyanLogger', function isBunyanLogger (logger) {
    return logger instanceof Bunyan;

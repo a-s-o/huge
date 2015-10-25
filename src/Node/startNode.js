@@ -8,7 +8,7 @@ const Bunyan = require('bunyan');
 const Process = require('../Process');
 
 module.exports = function startNode (node/*, opts*/) {
-   const opts = _.defaults({}, arguments[1], {
+   const opts = _.extend({}, arguments[1], {
       port: 8500,
       logger: Bunyan.createLogger({ name: node.name, huge: 'v1' }),
       env: {}
@@ -19,10 +19,11 @@ module.exports = function startNode (node/*, opts*/) {
    opts.env.SERVICE_DISCOVERY_PORT = opts.port;
 
    function launch (processes, service) {
-      return launchService(service, opts).then(serviceProcess => {
-         processes[service.name] = serviceProcess;
-         return processes;
-      });
+      return launchService(service, opts)
+         .then(serviceProcess => {
+            processes[service.name] = serviceProcess;
+            return processes;
+         });
    }
 
    return Bluebird.reduce(node.services, launch, {});
@@ -48,17 +49,17 @@ function launchService (service, opts) {
    // serviceProcess.monitor.child.stdout.pipe( opts.logger );
    // serviceProcess.monitor.child.stderr.pipe( opts.logger );
 
-   serviceProcess.monitor.start();
+   // serviceProcess.monitor.start();
 
    function checkProcess () {
       if (serviceProcess.monitor.running) {
          return serviceProcess;
       }
 
-      throw new Error(`
-         Service ${service.name} failed before
-         minUptime of ${service.minUptime}ms
-      `);
+      throw new Error(
+         `Service ${service.name} failed minUptime test ` +
+         `and exited before ${service.minUptime}ms`
+      );
    }
 
    return Bluebird

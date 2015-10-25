@@ -25,18 +25,22 @@ Process.create = t.typedFunc({
       command: t.String,
       options: t.struct({
          env : EnvironmentObject,
-
-         setupTimeout: t.Number,
          minUptime: t.Number,
          spinSleepTime: t.Number,
          cwd: t.String
-      })
-   })],
+      }, 'Process.create/options')
+   }, 'Process.create')],
+
    output: Process,
+
    fn: function processFactory (inputs) {
       const pidFile = getPidFilename(inputs.pid);
       const opts = _.extend({ pidFile }, inputs.options);
-      return new Monitor(inputs.command, opts);
+
+      return new Process({
+         pidFile: pidFile,
+         monitor: new Monitor(inputs.command, opts)
+      });
    }
 });
 

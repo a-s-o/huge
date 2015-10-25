@@ -36,8 +36,8 @@ Service.getDefaults = function serviceDefaults () {
       outputs        : [],
 
       instances      : 1,   // number of worker instances to run
-
       setupTimeout   : 3000,   // in milliseconds
+
       minUptime      : 2000,   // in milliseconds
       spinSleepTime  : 2000,   // in milliseconds
 
