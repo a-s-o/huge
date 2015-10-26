@@ -13,7 +13,7 @@ Micro-services orchestration and monitoring for node.js
 
 The framework plays to node's strengths to create small precise applications instead of building complex monolithic systems.
 
-**Huge** is not designed for infinite scalability. I use it for benefits in code quality, isolation and organization. It is not meant for (twitter|google|facebook) scales. The name is _#ironic_.
+**Huge** is not designed for infinite scalability or (twitter|google|facebook) size loads. I use it for benefits in code quality, isolation and organization. The name is _#ironic_.
 
 ## Features
 
@@ -23,6 +23,7 @@ The framework plays to node's strengths to create small precise applications ins
     * Process monitoring with `forever-monitor`
     * Load balanced instances using built-in `cluster` module
     * Log consolidation using `bunyan`
+* Focus on low memory usage in production
 
 ## Roadmap to 1.0
 
