@@ -3,7 +3,7 @@
 const Download = require('download');
 const path = require('path');
 
-const cfg = require('./config.js');
+const cfg = require('../config.js');
 const url = cfg.consul.url;
 const dir = cfg.consul.dir;
 

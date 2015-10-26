@@ -4,8 +4,8 @@
   "description": "Microservices orchestration framework for node.js",
   "main": "huge.js",
   "scripts": {
-    "start": "node huge.js",
-    "setup": "node setup.js",
+    "start": "node src/huge.js",
+    "setup": "node src/setup.js",
     "test": "mocha -w -c -R spec ./src/**/*.spec.js",
     "integration": "node test | bunyan"
   },
