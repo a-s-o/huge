@@ -3,6 +3,7 @@
 const t = require('@aso/tcomb');
 const _ = require('lodash');
 
+const Logger = require('../Logger');
 const types = require('../common/types');
 
 const Service = module.exports = t.struct({
@@ -17,6 +18,8 @@ const Service = module.exports = t.struct({
 
    // Methods
    compare: t.Function,
+   stdout: t.maybe(t.Function),
+   stderr: t.maybe(t.Function),
 
    // Service config
    instances: t.Number,
@@ -59,5 +62,13 @@ Service.compare = t.typedFunc({
    output: t.Boolean,
    fn: function defaultServiceComparator (a, b) {
       return a.compare(b);
+   }
+});
+
+Service.createLogger = t.typedFunc({
+   inputs: [Service, Logger],
+   output: Logger,
+   fn: function createServiceLogger (service, logger) {
+      return logger.child({ service: service.name });
    }
 });

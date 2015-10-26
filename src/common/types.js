@@ -1,7 +1,6 @@
 'use stirct';
 
 const t = require('@aso/tcomb');
-const Bunyan = require('bunyan');
 const Forever = require('forever-monitor');
 
 const EnvVarRegex = /^[A-Z_]+$/;
@@ -17,17 +16,15 @@ const EnvironmentObject = t.dict(
    'EnvironmentObject'
 );
 
-const Logger = t.irreducible('BunyanLogger', function isBunyanLogger (logger) {
-   return logger instanceof Bunyan;
-});
-
 const Monitor = t.irreducible('ForeverMonitor', function isMonitor (monitor) {
    return monitor instanceof Forever.Monitor;
 });
 
+const StringOrNumber = t.union([t.String, t.Number], 'StringOrNumber');
+
 module.exports = {
    EnvironmentVariable,
    EnvironmentObject,
-   Logger,
-   Monitor
+   Monitor,
+   StringOrNumber
 };

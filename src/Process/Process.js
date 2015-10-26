@@ -6,6 +6,7 @@ const path = require('path');
 const Monitor = require('forever-monitor').Monitor;
 
 const Service = require('../Service');
+const Logger = require('../Logger');
 const types = require('../common/types');
 
 function withServiceDiscovery (obj) {
@@ -21,25 +22,41 @@ const Process = module.exports = t.struct({
    monitor: types.Monitor
 }, 'Process');
 
+const ProcessOptions = t.struct({
+   args: t.list(types.StringOrNumber),
+   env : EnvironmentObject,
+   minUptime: t.Number,
+   spinSleepTime: t.Number,
+   cwd: t.String
+}, 'Process.create/options');
+
+ProcessOptions.create = function applyDefaultOptions () {
+   const opts = _.extend.apply(_, [{
+      args: [],
+      minUptime      : 2000,   // in milliseconds
+      spinSleepTime  : 2000,   // in milliseconds
+
+      cwd            : process.cwd(),
+      env            : {}
+   }].concat(arguments));
+
+   return new ProcessOptions(opts);
+};
+
 Process.create = t.typedFunc({
    inputs: [t.struct({
       service: Service,
-      logger: types.Logger,
+      logger: Logger,
 
       command: t.String,
-      options: t.struct({
-         env : EnvironmentObject,
-         minUptime: t.Number,
-         spinSleepTime: t.Number,
-         cwd: t.String
-      }, 'Process.create/options')
+      options: t.Object
    }, 'Process.create')],
 
    output: Process,
 
    fn: function processFactory (inputs) {
       const pidFile = getPidFilename(inputs.service.name);
-      const opts = _.extend({
+      const opts = ProcessOptions.create({
          pidFile,
          silent: true
       }, inputs.options);

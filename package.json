@@ -10,12 +10,13 @@
     "integration": "node test | bunyan"
   },
   "dependencies": {
-    "tcomb": "a-s-o/tcomb",
     "bluebird": "a-s-o/bluebird",
     "bunyan": "^1.5.1",
+    "consul": "^0.18.1",
     "forever-monitor": "^1.7.0",
     "lodash": "^3.10.1",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "tcomb": "a-s-o/tcomb"
   },
   "devDependencies": {
     "download": "^4.4.1"

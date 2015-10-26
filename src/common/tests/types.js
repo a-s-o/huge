@@ -21,18 +21,8 @@ describe('types.EnvironmentVariable', () => {
    });
 });
 
-describe('types.Logger', () => {
-   const logger = require('bunyan').createLogger({ name: 'test' });
-
+describe('types.Monitor', () => {
    it('is a tcomb Type', () => {
-      t.test(types.Logger, t.Type);
-   });
-
-   it('allows top-level bunyan loggers', () => {
-      t.test(logger, types.Logger);
-   });
-
-   it('allows child loggers', () => {
-      t.test(logger.child({ some: 'component' }), types.Logger);
+      t.test(types.Monitor, t.Type);
    });
 });

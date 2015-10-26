@@ -3,24 +3,12 @@
 const _ = require('lodash');
 const t = require('@aso/tcomb');
 const Bluebird = require('@aso/bluebird');
-const Bunyan = require('bunyan');
 
 const Process = require('../Process');
-const launchService = Bluebird.coroutine(serviceLauncher);
+const Logger = require('../Logger');
+const Service = require('../Service');
 
-function createLogger (name) {
-   return Bunyan.createLogger({
-      name: name,
-      huge: 'v1',
-      streams: [
-         { level: 'info', stream: process.stdout },
-         { level: 'error', stream: process.stderr }
-      ],
-      serializers: {
-         buffer: buf => buf.toString()
-      }
-   });
-}
+const launchService = Bluebird.coroutine(serviceLauncher);
 
 module.exports = function startNode (node/*, opts*/) {
    const opts = _.extend({}, arguments[1], {
@@ -28,20 +16,18 @@ module.exports = function startNode (node/*, opts*/) {
       env: {}
    });
 
-   if (!opts.logger) opts.logger = createLogger(node.name);
+   if (!opts.logger) opts.logger = Logger.create(node.name);
 
    // Add service discovery variables to all processes
    opts.env.SERVICE_DISCOVERY_HOST = 'localhost';
    opts.env.SERVICE_DISCOVERY_PORT = opts.port;
 
-   function launch (processes, service) {
-      return launchService(service, opts)
-         .timeout(service.setupTimeout)
-         .then(serviceProcess => {
-            processes[service.name] = serviceProcess;
-            return processes;
-         });
-   }
+   const launch = (processes, service) => launchService(service, opts)
+      .timeout(service.setupTimeout)
+      .then(serviceProcess => {
+         processes[service.name] = serviceProcess;
+         return processes;
+      });
 
    return Bluebird.reduce(node.services, launch, {});
 };
@@ -59,7 +45,7 @@ function *serviceLauncher (service, opts) {
 
    const it = Process.create({
       service: service,
-      logger : opts.logger.child({ service: service.name }),
+      logger : Service.createLogger(service, opts.logger),
       command: service.paths.main,
       options: processOptions
    });

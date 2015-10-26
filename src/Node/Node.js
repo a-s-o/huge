@@ -5,8 +5,7 @@ const t = require('@aso/tcomb');
 const Bluebird = require('@aso/bluebird');
 
 const Service = require('../Service');
-const types = require('../common/types');
-const optional = t.maybe;
+const Logger = require('../Logger');
 
 // Internal functions for create and starting nodes
 const checkDeps = require('./checkDeps');
@@ -42,10 +41,7 @@ Node.create = t.typedFunc({
 // and their respective processes, which can be
 // used to create an ActiveNode
 Node.start = t.typedFunc({
-   inputs: [Node, t.struct({
-      port   : optional(t.Number),     // Default: 8500
-      logger : optional(types.Logger)  // Default: Logger { name: 'huge' }
-   })],
+   inputs: [Node, Logger, t.Object],
    output: t.Promise, // Promise < ActiveNode.processes >
    fn: startNode
 });
