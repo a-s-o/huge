@@ -6,22 +6,19 @@ const Bluebird = require('@aso/bluebird');
 
 const Monitor = require('../Monitor');
 const MonitorLogger = require('../MonitorLogger');
-const Logger = require('../Logger');
 const Service = require('../Service');
 
 const launchService = Bluebird.coroutine(serviceLauncher);
 
-module.exports = function startNode (node/*, opts*/) {
-   const opts = _.extend({}, arguments[1], {
-      port: 8500,
+module.exports = function startNode (node, logger, consul/*, opts*/) {
+   const opts = _.extend({}, arguments[4], {
+      logger: logger,
       env: {}
    });
 
-   if (!opts.logger) opts.logger = Logger.create(node.name);
-
    // Add service discovery variables to all processes
-   opts.env.SERVICE_DISCOVERY_HOST = 'localhost';
-   opts.env.SERVICE_DISCOVERY_PORT = opts.port;
+   opts.env.SERVICE_DISCOVERY_HOST = consul.SERVICE_DISCOVERY_HOST;
+   opts.env.SERVICE_DISCOVERY_PORT = consul.SERVICE_DISCOVERY_PORT;
 
    const launch = (processes, service) => launchService(service, opts)
       .timeout(service.setupTimeout)

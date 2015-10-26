@@ -7,7 +7,7 @@ const Logger = require('../Logger');
 const Monitor = require('../Monitor');
 
 function isMonitorLogger (x) {
-   return Logger.is(x.logger);
+   return Logger.is(x.logger) && t.Object.is(x.loggingCtx);
 }
 
 const MonitorLogger = module.exports = t.subtype(Monitor,

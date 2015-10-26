@@ -21,4 +21,5 @@ const testNode = {
 };
 
 huge.node.create(testNode)
-   .then((node) => huge.node.start(node));
+   .then((node) => huge.node.start(node))
+   .then((activeNode) => console.log(activeNode));

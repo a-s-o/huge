@@ -6,6 +6,7 @@ const Service = require('./Service');
 const Node = require('./Node');
 const ActiveNode = require('./ActiveNode');
 const Logger = require('./Logger');
+const MonitorLogger = require('./MonitorLogger');
 const Consul = require('./Consul');
 
 module.exports = {
@@ -18,11 +19,17 @@ module.exports = {
          const node = yield Bluebird.resolve(nodePromise);
          const opts = arguments[1] || {};
          const logger = opts.logger || Logger.create(node.name);
-         const consul = opts.consul || (yield Consul.create(node, logger, opts));
 
-         console.log(consul);
-         // const processes = yield Node.start(node, logger, consul, opts);
-         // return ActiveNode.create(node, logger, consul, processes);
+         // Create consul process and attach a logger to it
+         const consul = yield Consul.create(node.name, opts);
+         const consulLogger = logger.child({ service: 'consul' });
+         MonitorLogger.create(consul.monitor, consulLogger);
+
+         // Start the node and collect its service processes
+         const processes = yield Node.start(node, logger, consul, opts);
+
+         // Return an active node
+         return ActiveNode.create(node, logger, consul, processes);
       })
    },
 

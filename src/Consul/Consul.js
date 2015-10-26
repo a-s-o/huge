@@ -6,27 +6,24 @@ const Bluebird = require('@aso/bluebird');
 const path = require('path');
 const Client = require('consul');
 
-const Node = require('../Node');
-const Logger = require('../Logger');
 const Service = require('../Service');
 const Monitor = require('../Monitor');
-const MonitorLogger = require('../MonitorLogger');
 
 function isConsul (consul) {
-   return consul instanceof Client;
+   return consul instanceof Client &&
+      t.String.is(consul.SERVICE_DISCOVERY_HOST) &&
+      t.Number.is(consul.SERVICE_DISCOVERY_PORT) &&
+      Monitor.is(consul.monitor);
 }
 
 const Consul = module.exports = t.irreducible('Consul', isConsul);
 
-// Logger.create returns the default logger used
-// by huge when a logger is not supplied by the
-// user. This is not a replacement for Bunyan.createLogger
 Consul.create = t.typedFunc({
-   inputs: [Node, Logger, t.Object],
+   inputs: [t.String, t.Object],
 
    output: t.Promise,  // Promise < Consul >
 
-   fn: Bluebird.coroutine(function *consulFactory (node, logger/*, opts*/) {
+   fn: Bluebird.coroutine(function *consulFactory (nodeName/*, opts*/) {
       const service = createService();
       const consulDir = service.paths.dir;
 
@@ -37,7 +34,7 @@ Consul.create = t.typedFunc({
          args: [
             'agent',
             '-server',
-            '-node', node.name,
+            '-node', nodeName,
             '-bootstrap-expect', 1,   // Only 1 server for now
             '-pid-file', path.join(consulDir, `consul.pid}`),
             '-data-dir', path.resolve(consulDir, './data'),
@@ -46,13 +43,16 @@ Consul.create = t.typedFunc({
          ]
       });
 
-      const consul = new Client({
-         host: 'localhost',
-         post: 8500
-      });
+      const host = 'localhost';
+      const port = 8500;
+
+      const consul = new Client({ host, port });
+
+      consul.SERVICE_DISCOVERY_HOST = host;
+      consul.SERVICE_DISCOVERY_PORT = port;
 
       // Enable logging
-      consul.monitor = MonitorLogger.create(monitor, logger);
+      consul.monitor = monitor;
 
       return consul;
    })

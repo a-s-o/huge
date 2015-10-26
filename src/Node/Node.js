@@ -6,6 +6,7 @@ const Bluebird = require('@aso/bluebird');
 
 const Service = require('../Service');
 const Logger = require('../Logger');
+const Consul = require('../Consul');
 
 // Internal functions for create and starting nodes
 const checkDeps = require('./checkDeps');
@@ -41,7 +42,7 @@ Node.create = t.typedFunc({
 // and their respective processes, which can be
 // used to create an ActiveNode
 Node.start = t.typedFunc({
-   inputs: [Node, Logger, t.Object],
+   inputs: [Node, Logger, Consul, t.Object],
    output: t.Promise, // Promise < ActiveNode.processes >
    fn: startNode
 });
