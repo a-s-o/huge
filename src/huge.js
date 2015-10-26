@@ -20,7 +20,9 @@ module.exports = {
          const opts = arguments[1] || {};
          const logger = opts.logger || Logger.create(node.name);
 
-         // Create consul process and attach a logger to it
+         // Create consul process and attach a logger to
+         //
+         // todo: accept consul client in options (similar to logger)
          const consul = yield Consul.create(node.name, opts);
          const consulLogger = logger.child({ service: 'consul' });
          MonitorLogger.create(consul.monitor, consulLogger);
