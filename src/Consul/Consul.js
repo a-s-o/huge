@@ -9,7 +9,8 @@ const Client = require('consul');
 const Node = require('../Node');
 const Logger = require('../Logger');
 const Service = require('../Service');
-const Process = require('../Process');
+const Monitor = require('../Monitor');
+const MonitorLogger = require('../MonitorLogger');
 
 function isConsul (consul) {
    return consul instanceof Client;
@@ -28,24 +29,21 @@ Consul.create = t.typedFunc({
    fn: Bluebird.coroutine(function *consulFactory (node, logger/*, opts*/) {
       const service = createService();
       const consulDir = service.paths.dir;
-      const pidFile = path.join(consulDir, `pidfile.pid}`);
 
-      const process = Process.create({
-         service: service,
-         logger: Service.createLogger(service, logger),
+      const monitor = Monitor.create({
          command: service.paths.main,
-         options: {
-            args: [
-               'agent',
-               '-server',
-               '-node', node.name,
-               '-bootstrap-expect', 1,   // Only 1 server for now
-               '-pid-file', pidFile,
-               '-data-dir', path.resolve(consulDir, './data'),
-               '-ui-dir', path.resolve(consulDir, './ui')
-               // '-config-dir', path.resolve(process.cwd(), './cfg/consul'),
-            ]
-         }
+         pidFile: path.join(consulDir, `monitor.pid}`),
+         silent: true,
+         args: [
+            'agent',
+            '-server',
+            '-node', node.name,
+            '-bootstrap-expect', 1,   // Only 1 server for now
+            '-pid-file', path.join(consulDir, `consul.pid}`),
+            '-data-dir', path.resolve(consulDir, './data'),
+            '-ui-dir', path.resolve(consulDir, './ui')
+            // '-config-dir', path.resolve(process.cwd(), './cfg/consul'),
+         ]
       });
 
       const consul = new Client({
@@ -53,7 +51,8 @@ Consul.create = t.typedFunc({
          post: 8500
       });
 
-      consul.process = process;
+      // Enable logging
+      consul.monitor = MonitorLogger.create(monitor, logger);
 
       return consul;
    })

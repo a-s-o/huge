@@ -74,66 +74,7 @@ function getPidFilename (name) {
 }
 
 function setupLoggerPrototype () {
-   const Proto = {
-      onError (err) {
-         this.log.error({
-            eventType: 'serviceErrored',
-            err: err,
-            pid: _.get(this, 'monitor.child.pid')
-         });
-      },
-      onStart () {
-         this.log.info({
-            eventType: 'serviceStarted',
-            pid: _.get(this, 'monitor.child.pid')
-         });
-      },
-      onStop () {
-         this.log.info({
-            eventType: 'serviceStopped',
-            pid: _.get(this, 'monitor.child.pid')
-         });
-      },
-      onRestart () {
-         this.log.info({
-            eventType: 'serviceRestarted',
-            pid: _.get(this, 'monitor.child.pid')
-         });
-      },
-      onStdOut (buf) {
-         if (this.service.stdout) {
-            this.service.stdout(this.log, buf);
-         } else {
-            this.log.info({
-               eventType: 'serviceSaid',
-               pid: _.get(this, 'monitor.child.pid'),
-               buffer: buf
-            });
-         }
-      },
-      onStdErr (err) {
-         if (this.service.stderr) {
-            this.service.stderr(this.log, err);
-         } else {
-            this.log.error({
-               eventType: 'serviceErrored',
-               err: err,
-               pid: _.get(this, 'monitor.child.pid')
-            });
-         }
-      },
-      onExit () {
-         this.log.info({ eventType: 'serviceEnded' });
 
-         const ctx = this;
-         this.monitor.off('error',   ctx.onError);
-         this.monitor.off('start',   ctx.onStart);
-         this.monitor.off('stop',    ctx.onStop);
-         this.monitor.off('restart', ctx.onRestart);
-         this.monitor.off('stdout',  ctx.onStdOut);
-         this.monitor.off('stderr',  ctx.onStdErr);
-      }
-   };
 
    return function bindToMonitor (service, logger, monitor) {
       const ctx = {

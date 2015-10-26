@@ -4,7 +4,8 @@ const _ = require('lodash');
 const t = require('@aso/tcomb');
 const Bluebird = require('@aso/bluebird');
 
-const Process = require('../Process');
+const Monitor = require('../Monitor');
+const MonitorLogger = require('../MonitorLogger');
 const Logger = require('../Logger');
 const Service = require('../Service');
 
@@ -39,21 +40,25 @@ const passThroughOptions = [
 ];
 
 function *serviceLauncher (service, opts) {
-   const processOptions = _.pick(service, passThroughOptions);
-   processOptions.env = _.extend({}, service.env, opts.env);
-   // processOptions.silent = true;
+   const monitorArgs = _.chain(service)
+      .pick(passThroughOptions)
+      .extend({
+         command: service.paths.main,
+         env: _.extend({}, service.env, opts.env)
+      })
+      .value();
 
-   const it = Process.create({
-      service: service,
-      logger : Service.createLogger(service, opts.logger),
-      command: service.paths.main,
-      options: processOptions
-   });
+   const monitor = MonitorLogger.create(
+      // Create a monitor
+      Monitor.create(monitorArgs),
+      // Create a child logger
+      Service.createLogger(opts.logger)
+   );
 
    let started = false;
    let failed = false;
 
-   it.monitor.once('exit', () => {
+   monitor.once('exit', () => {
       failed = `Service [${service.name}] permanentally exited ` +
          `before minUptime of ${service.minUptime}ms`;
    });
