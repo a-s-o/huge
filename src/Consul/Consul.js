@@ -5,6 +5,7 @@ const t = require('@aso/tcomb');
 const Bluebird = require('@aso/bluebird');
 const path = require('path');
 const Client = require('consul');
+const Forever = require('forever-monitor');
 
 const Service = require('../Service');
 const Monitor = require('../Monitor');
@@ -27,8 +28,7 @@ Consul.create = t.typedFunc({
       const service = createService();
       const consulDir = service.paths.dir;
 
-      const monitor = Monitor.create({
-         command: service.paths.main,
+      const monitor = Forever.start(service.paths.main, {
          pidFile: path.join(consulDir, `monitor.pid}`),
          silent: true,
          args: [

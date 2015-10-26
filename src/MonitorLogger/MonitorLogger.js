@@ -112,19 +112,19 @@ Proto = {
          this.stdout(this.log, buf);
       } else {
          this.log.info({
-            eventType: 'stdOut',
+            eventType: 'stdout',
             pid: _.get(this, 'monitor.child.pid'),
             buffer: buf
          });
       }
    },
-   onStdErr (err) {
+   onStdErr (buf) {
       if (this.stderr) {
-         this.stderr(this.log, err);
+         this.stderr(this.log, buf);
       } else {
          this.log.error({
-            eventType: 'stdErr',
-            err: err,
+            eventType: 'stderr',
+            buffer: buf,
             pid: _.get(this, 'monitor.child.pid')
          });
       }

@@ -27,8 +27,6 @@ module.exports = {
          const consulLogger = logger.child({ service: 'consul' });
          MonitorLogger.create(consul.monitor, consulLogger);
 
-         consul.monitor.start();
-
          // Start the node and collect its service processes
          // const processes = yield Node.start(node, logger, consul, opts);
 

@@ -30,7 +30,6 @@ Monitor.create = t.typedFunc({
    output: Monitor,
    fn: function processFactory () {
       const opts = _.extend({
-         args: [],
          minUptime      : 2000,   // in milliseconds
          spinSleepTime  : 2000,   // in milliseconds
 
@@ -38,6 +37,9 @@ Monitor.create = t.typedFunc({
          env            : {}
       }, arguments[0]);
 
-      return new Forever.Monitor(opts);
+      // Clone args as forever-monitor will be mutating this
+      opts.args = [].concat(opts.args || []);
+
+      return new Forever.Monitor(opts.command, _.omit(opts, 'command'));
    }
 });
