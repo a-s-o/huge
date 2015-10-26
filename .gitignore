@@ -1,3 +1,4 @@
 node_modules
 consul_bin
+pids
 *.log

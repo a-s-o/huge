@@ -1,6 +1,6 @@
 'use strict';
 
-const t = require('tcomb-validation');
+const t = require('@aso/tcomb');
 const url = require('url');
 const bunyan = require('bunyan');
 
