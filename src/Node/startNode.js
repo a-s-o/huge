@@ -15,7 +15,10 @@ function createLogger (name) {
       streams: [
          { level: 'info', stream: process.stdout },
          { level: 'error', stream: process.stderr }
-      ]
+      ],
+      serializers: {
+         buffer: buf => buf.toString()
+      }
    });
 }
 

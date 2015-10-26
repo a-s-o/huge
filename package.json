@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node huge.js",
     "setup": "node setup.js",
-    "test": "mocha -w -c -R spec ./src/**/*.spec.js"
+    "test": "mocha -w -c -R spec ./src/**/*.spec.js",
+    "integration": "node test | bunyan"
   },
   "dependencies": {
     "tcomb": "a-s-o/tcomb",

@@ -14,7 +14,7 @@ function withServiceDiscovery (obj) {
 }
 
 const EnvironmentObject = t.subtype(types.EnvironmentObject, withServiceDiscovery);
-const bindLogging = setupLogger();
+const enableLogging = setupLoggerPrototype();
 
 const Process = module.exports = t.struct({
    pidFile: t.String,
@@ -39,11 +39,14 @@ Process.create = t.typedFunc({
 
    fn: function processFactory (inputs) {
       const pidFile = getPidFilename(inputs.service.name);
-      const opts = _.extend({ pidFile }, inputs.options);
+      const opts = _.extend({
+         pidFile,
+         silent: true
+      }, inputs.options);
 
       const monitor = new Monitor(inputs.command, opts);
 
-      bindLogging(inputs.service, inputs.logger, monitor);
+      enableLogging(inputs.service, inputs.logger, monitor);
 
       return new Process({ pidFile, monitor });
    }
@@ -53,51 +56,57 @@ function getPidFilename (name) {
    return path.resolve(process.cwd(), `./pids/${name.pid}`);
 }
 
-function setupLogger () {
+function setupLoggerPrototype () {
    const Proto = {
       onError (err) {
          this.log.error({
-            eventType: 'error',
+            eventType: 'serviceErrored',
             err: err,
             pid: _.get(this, 'monitor.child.pid')
          });
       },
       onStart () {
          this.log.info({
-            eventType: 'start',
+            eventType: 'serviceStarted',
             pid: _.get(this, 'monitor.child.pid')
          });
       },
       onStop () {
          this.log.info({
-            eventType: 'start',
+            eventType: 'serviceStopped',
             pid: _.get(this, 'monitor.child.pid')
          });
       },
       onRestart () {
          this.log.info({
-            eventType: 'restart',
+            eventType: 'serviceRestarted',
             pid: _.get(this, 'monitor.child.pid')
          });
       },
-      onStdOut (data) {
+      onStdOut (buf) {
          if (this.service.stdout) {
-            this.service.stdout(this.log, data);
+            this.service.stdout(this.log, buf);
          } else {
-            this.log.info({ eventType: 'stdout', data });
+            this.log.info({
+               eventType: 'serviceSaid',
+               pid: _.get(this, 'monitor.child.pid'),
+               buffer: buf
+            });
          }
       },
       onStdErr (err) {
          if (this.service.stderr) {
             this.service.stderr(this.log, err);
          } else {
-            this.log.error({ eventType: 'stderr', err });
+            this.log.error({
+               eventType: 'serviceErrored',
+               err: err,
+               pid: _.get(this, 'monitor.child.pid')
+            });
          }
       },
       onExit () {
-         this.log.info({
-            eventType: 'exit'
-         });
+         this.log.info({ eventType: 'serviceEnded' });
 
          const ctx = this;
          this.monitor.off('error',   ctx.onError);
