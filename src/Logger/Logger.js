@@ -25,7 +25,11 @@ Logger.create = t.typedFunc({
             { level: 'error', stream: process.stderr }
          ],
          serializers: {
-            buffer: buf => buf.toString()
+            buffer: buf => buf.toString(),
+            err: err => ({
+               message: err.message,
+               stack: err.stack.split('\n')
+            })
          }
       });
    }

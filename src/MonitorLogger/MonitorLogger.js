@@ -84,26 +84,26 @@ MonitorLogger.disable = t.typedFunc({
 Proto = {
    onError (err) {
       this.log.error({
-         eventType: 'serviceErrored',
+         eventType: 'processErrored',
          err: err,
          pid: _.get(this, 'monitor.child.pid')
       });
    },
    onStart () {
       this.log.info({
-         eventType: 'serviceStarted',
+         eventType: 'processStarted',
          pid: _.get(this, 'monitor.child.pid')
       });
    },
    onStop () {
       this.log.info({
-         eventType: 'serviceStopped',
+         eventType: 'processStopped',
          pid: _.get(this, 'monitor.child.pid')
       });
    },
    onRestart () {
       this.log.info({
-         eventType: 'serviceRestarted',
+         eventType: 'processRestarted',
          pid: _.get(this, 'monitor.child.pid')
       });
    },
@@ -112,7 +112,7 @@ Proto = {
          this.stdout(this.log, buf);
       } else {
          this.log.info({
-            eventType: 'serviceOutput',
+            eventType: 'stdOut',
             pid: _.get(this, 'monitor.child.pid'),
             buffer: buf
          });
@@ -123,14 +123,14 @@ Proto = {
          this.stderr(this.log, err);
       } else {
          this.log.error({
-            eventType: 'serviceErrored',
+            eventType: 'stdErr',
             err: err,
             pid: _.get(this, 'monitor.child.pid')
          });
       }
    },
    onExit () {
-      this.log.info({ eventType: 'serviceEnded' });
+      this.log.info({ eventType: 'processEnded' });
 
       const ctx = this;
       this.monitor.off('error',   ctx.onError);
