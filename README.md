@@ -1,5 +1,5 @@
 # Huge
-Micro-services framework for node.js
+Micro-services orchestration and monitoring for node.js
 
 ## Installation
 
@@ -9,7 +9,7 @@ Micro-services framework for node.js
 
 ## What is this
 
-**Huge** is set of components that allows you to design and build a system using small, independent `node.js` applications (called micro-services). These processes can communicate with each other using built in service discovery.
+**Huge** is a framework that allows you to design and build a system using small, independent `node.js` applications (called micro-services). These processes can communicate with each other using built in service discovery.
 
 The framework plays to node's strengths to create small precise applications instead of building complex monolithic systems.
 
