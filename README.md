@@ -19,10 +19,10 @@ The framework plays to node's strengths to create small precise applications ins
 
 * Easy orchestration of dependent applications
 * Lightweight, provides a simple layer over proven components
-* Service discovery using `consul`
-* Load balancing between multiple instances of same micro-service using native node.js `cluster` module
-* Process monitoring with `forever-monitor`
-* Log consolidation using `bunyan`
+    * Service discovery using internally monitored `consul` process
+    * Process monitoring with `forever-monitor`
+    * Load balanced instances using built-in `cluster` module
+    * Log consolidation using `bunyan`
 
 ## Roadmap to 1.0
 
