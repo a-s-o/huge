@@ -31,14 +31,15 @@ Consul.create = t.typedFunc({
       const monitor = Forever.start(service.paths.main, {
          pidFile: path.join(consulDir, `monitor.pid}`),
          silent: true,
+         cwd: consulDir,
          args: [
             'agent',
             '-server',
             '-node', nodeName,
             '-bootstrap-expect', 1,   // Only 1 server for now
             '-pid-file', path.join(consulDir, `consul.pid}`),
-            '-data-dir', path.resolve(consulDir, './data'),
-            '-ui-dir', path.resolve(consulDir, './ui')
+            '-data-dir', path.join(consulDir, 'data'),
+            '-ui-dir', path.join(consulDir, 'ui')
             // '-config-dir', path.resolve(process.cwd(), './cfg/consul'),
          ]
       });

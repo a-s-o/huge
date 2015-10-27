@@ -45,7 +45,7 @@ const monitorLoggerFactory = t.typedFunc({
    }
 });
 
-MonitorLogger.create = (monitor, logger, opts) => {
+MonitorLogger.decorate = (monitor, logger, opts) => {
    return monitorLoggerFactory(monitor, logger, opts || {});
 };
 
