@@ -1,0 +1,12 @@
+{
+   "name": "huge-server",
+   "main": "start.js",
+   "version": "0.1.0",
+   "description": "web server for huge framework",
+   "author": "Amandeep",
+   "license": "UNLICENSED",
+   "scripts": {
+      "build-deps": "docker build --rm=true -t huge/deps ./deps; exit 0",
+      "build": "docker build --rm=true -t huge/server .; exit 0"
+   }
+}
