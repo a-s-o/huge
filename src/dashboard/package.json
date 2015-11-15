@@ -1,0 +1,8 @@
+{
+   "name": "dashboard",
+   "main": "main.jsx",
+   "version": "0.0.1",
+   "description": "Huge dashboard",
+   "author": "Amandeep",
+   "license": "MIT"
+}
