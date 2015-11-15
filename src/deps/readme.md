@@ -2,9 +2,9 @@
 
 Container with all the huge-server dependencies, so it doesn't need to be recompiled during development.
 
-Create (from the main server directory):
+From the project root:
 
-    docker build --rm=true -t huge/deps ./deps
+    node make deps
 
 Includes:
 

@@ -2,9 +2,9 @@
 
 ## Build
 
-From the main server directory
+From the project root:
 
-    docker build --rm=true -t huge/server .
+    node make docker
 
 ## Run
 
