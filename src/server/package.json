@@ -1,8 +1,16 @@
 {
-   "name": "huge-server",
-   "main": "start.js",
-   "version": "1.0.0",
-   "description": "",
-   "author": "Amandeep",
-   "license": "MIT"
+  "name": "huge-server",
+  "main": "www/start.js",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Amandeep",
+  "license": "MIT",
+  "dependencies": {
+    "@aso/bluebird": "github:a-s-o/bluebird",
+    "@aso/tcomb": "github:a-s-o/tcomb",
+    "koa": "1.1.2"
+  },
+  "devDependencies": {
+    "node-dev": "^2.7.1"
+  }
 }
