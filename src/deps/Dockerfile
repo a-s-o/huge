@@ -7,7 +7,8 @@ ENV CONSUL_VERSION=0.5.2 \
     NODE_VERSION=v5.0.0 \
     NPM_VERSION=3
 
-# Build dependencies (first 2 are for consul; rest are for node.js)
+# Build dependencies (
+# First 2 are for consul; rest are for node.js
 RUN apk add --update \
    curl \
    ca-certificates \
@@ -24,9 +25,13 @@ RUN apk add --update \
 # Consul (agent) #
 ##################
 
-RUN curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
-    apk add --allow-untrusted /tmp/glibc-2.21-r2.apk && \
-    rm -rf /tmp/glibc-2.21-r2.apk /var/cache/apk/*
+# Using curl here instead of ADD because
+# it follows url redirects
+RUN curl -Ls \
+      https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk \
+      > /tmp/glibc-2.21-r2.apk \
+    && apk add --allow-untrusted /tmp/glibc-2.21-r2.apk \
+    && rm -rf /tmp/glibc-2.21-r2.apk /var/cache/apk/*
 
 ADD [
   "https://dl.bintray.com/mitchellh/consul/${CONSUL_VERSION}_linux_amd64.zip",
@@ -91,4 +96,5 @@ RUN apk del \
     /root/.node-gyp \
     /usr/lib/node_modules/npm/man \
     /usr/lib/node_modules/npm/doc \
-    /usr/lib/node_modules/npm/html
+    /usr/lib/node_modules/npm/html \
+    /tmp
