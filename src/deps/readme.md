@@ -4,7 +4,7 @@ Container with all the huge-server dependencies, so it doesn't need to be recomp
 
 From the project root:
 
-    node make deps
+    ./commands.sh make-deps
 
 Includes:
 

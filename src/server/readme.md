@@ -4,7 +4,7 @@
 
 From the project root:
 
-    node make docker
+    ./commands.sh make-server
 
 ## Run
 
