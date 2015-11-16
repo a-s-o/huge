@@ -8,7 +8,8 @@
   "dependencies": {
     "@aso/bluebird": "github:a-s-o/bluebird",
     "@aso/tcomb": "github:a-s-o/tcomb",
-    "koa": "1.1.2"
+    "koa": "1.1.2",
+    "shelljs": "^0.5.3"
   },
   "devDependencies": {
     "node-dev": "^2.7.1"

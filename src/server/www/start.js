@@ -1,11 +1,19 @@
 'use strict';
 
-const express = require('express');
+const app = require('koa')();
+const shell = require('shelljs');
 
-const app = express();
+function exec (arg) {
+   return (next) => shell.exec(arg, { silent: true }, (code, data) => {
+      next(null, data.toString());
+   });
+}
 
-app.get('*', function indexPage (req, res) {
-   res.json({ title: 'Hello - how are you?' });
+app.use(function *respondAll () {
+   this.body = [
+      yield exec('/bin/consul --help')
+      // yield exec('/bin/registrator --help')
+   ].join('\n');
 });
 
 const server = app.listen(3000, function started () {
