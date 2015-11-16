@@ -60,7 +60,6 @@ app.post('/home', function homePage (req, res) {
    });
 });
 
-
 /*************************************************************
  *
  * Webpack Dev Server
